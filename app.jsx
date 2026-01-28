@@ -2837,9 +2837,9 @@ CXR: Cardiomegaly with bilateral pleural effusions and pulmonary vascular conges
             </div>
           </div>
 
-          {/* Reporter Card */}
+          {/* Reporter Card - goes directly to presentation (no scenario picker) */}
           <div
-            onClick={() => setShowScenarios('reporter')}
+            onClick={() => onStartReporter(null)}
             className="bg-[#1a1a24] rounded-xl p-5 border-2 border-gray-700 hover:border-amber-500 cursor-pointer transition-all group"
           >
             <div className="flex items-start gap-4">
@@ -2858,12 +2858,12 @@ CXR: Cardiomegaly with bilateral pleural effusions and pulmonary vascular conges
         </div>
       </div>
 
-      {/* Scenario Selection Modal */}
+      {/* Scenario Selection Modal (History Taking only) */}
       {showScenarios && (
         <div className="mb-8 bg-[#1a1a24] rounded-xl border border-gray-700 p-6 animate-fadeIn">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">
-              {showScenarios === 'history' ? '🩺 Choose a Patient for History Taking' : '📣 Choose a Case to Present'}
+              🩺 Choose a Patient for History Taking
             </h3>
             <button
               onClick={() => { setShowScenarios(false); setSelectedScenario(null); }}
@@ -2915,17 +2915,13 @@ CXR: Cardiomegaly with bilateral pleural effusions and pulmonary vascular conges
             <button
               onClick={() => {
                 if (selectedScenario) {
-                  if (showScenarios === 'history') {
-                    onStartHistory(selectedScenario);
-                  } else {
-                    onStartReporter(selectedScenario);
-                  }
+                  onStartHistory(selectedScenario);
                 }
               }}
               disabled={!selectedScenario || !isApiConfigured}
               className="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:bg-gray-700 disabled:cursor-not-allowed rounded-lg font-medium transition"
             >
-              {showScenarios === 'history' ? 'Start History Taking →' : 'Start Presentation →'}
+              Start History Taking →
             </button>
           </div>
         </div>
@@ -4833,9 +4829,12 @@ function Reporter({ caseText, patientData, onComplete, onBack }) {
     setMode('feedback');
 
     try {
+      const userMessage = caseText
+        ? `ORIGINAL PATIENT CASE:\n${caseText}\n\nSTUDENT'S ORAL PRESENTATION:\n${presentationText}`
+        : `STUDENT'S ORAL PRESENTATION:\n${presentationText}\n\n(No reference case provided — the student is presenting their own case. Evaluate the presentation based on structure, organization, clarity, and clinical reasoning.)`;
       const response = await ClaudeAPI.call(
         PROMPTS.PRESENTATION_FEEDBACK,
-        `ORIGINAL PATIENT CASE:\n${caseText}\n\nSTUDENT'S ORAL PRESENTATION:\n${presentationText}`
+        userMessage
       );
 
       let parsed;
@@ -9382,7 +9381,8 @@ function App() {
   };
 
   const handleStartReporter = (scenario) => {
-    setStandaloneScenario(scenario);
+    // scenario can be null (user presents their own case)
+    setStandaloneScenario(scenario || { caseText: '', patientData: null });
     setCurrentView('standalone-reporter');
   };
 
