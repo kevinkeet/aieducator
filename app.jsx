@@ -1898,14 +1898,16 @@ const PROMPTS = {
   CASE_ANALYSIS: `You are an expert medical educator analyzing a patient case for teaching purposes. You have deep expertise in internal medicine, particularly cardiology, pulmonology, nephrology, and critical care.
 
 Your task is to analyze the provided patient case and identify:
-1. The key medical problems/diagnoses present
-2. Critical clinical findings that guide management
-3. Relevant pathophysiology concepts to teach
-4. Common clinical decision points/dilemmas
-5. Applicable landmark trials and guidelines
+1. A brief 2-3 sentence summary of the case (who the patient is, what they presented with, and the key clinical question)
+2. The key medical problems/diagnoses present
+3. Critical clinical findings that guide management
+4. Relevant pathophysiology concepts to teach
+5. Common clinical decision points/dilemmas
+6. Applicable landmark trials and guidelines
 
 Respond in JSON format:
 {
+  "summary": "A 2-3 sentence plain-language summary of the case for quick orientation",
   "problems": [{"name": "...", "acuity": "acute|chronic", "priority": "high|medium|low"}],
   "keyFindings": [{"finding": "...", "significance": "...", "critical": true/false}],
   "teachingTopics": [{"topic": "...", "relevance": "...", "concepts": ["..."]}],
@@ -3135,6 +3137,9 @@ function PathSelector({ onSelect, analysis, patientData }) {
       {analysis && (
         <div className="mt-8 p-4 bg-[#1a1a24] rounded-lg border border-gray-700">
           <div className="text-sm text-gray-500 mb-2">Case Overview</div>
+          {analysis.summary && (
+            <p className="text-sm text-gray-300 mb-3 leading-relaxed">{analysis.summary}</p>
+          )}
           <div className="flex flex-wrap gap-2">
             {analysis.problems?.slice(0, 4).map((p, i) => (
               <span key={i} className={`px-2 py-1 rounded text-xs ${
@@ -6612,6 +6617,9 @@ function PrimaryModeSelector({ onSelect, analysis, patientData }) {
       {analysis && (
         <div className="p-4 bg-[#1a1a24] rounded-lg border border-gray-700">
           <div className="text-sm text-gray-500 mb-2">Case Overview</div>
+          {analysis.summary && (
+            <p className="text-sm text-gray-300 mb-3 leading-relaxed">{analysis.summary}</p>
+          )}
           <div className="flex flex-wrap gap-2">
             {analysis.problems?.slice(0, 6).map((p, i) => (
               <span key={i} className={`px-2 py-1 rounded text-xs ${
