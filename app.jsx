@@ -1,4 +1,4 @@
-// Watershed - AI-Powered Case-Based Medical Learning Platform
+// Watershed - Case-Based Medical Learning Platform
 const { useState, useEffect, useRef, useCallback } = React;
 
 // ============================================================================
@@ -2085,7 +2085,7 @@ IMPORTANT: Return ONLY valid JSON with no additional text before or after. Start
   ATTENDING_TEACHING_POINTS: `You are an experienced internal medicine attending physician on rounds. Analyze this case and identify the specific teaching points you would highlight to residents and students.
 
 Focus on practical, clinically-relevant points that distinguish excellent clinicians. Include:
-1. "Pimp questions" - Classic questions attendings ask on rounds for this type of case
+1. "Rounds questions" - Classic questions attendings ask on rounds for this type of case
 2. Physical exam pearls - What to look for and why it matters
 3. Workup insights - What tests tell you and common interpretation pitfalls
 4. Management nuances - The details that matter (timing, dosing, monitoring)
@@ -2096,7 +2096,7 @@ IMPORTANT: Return ONLY valid JSON with no additional text. Start with { and end 
 {
   "attendingPoints": [
     {
-      "category": "Pimp Question|Physical Exam Pearl|Workup Insight|Management Nuance|Disposition",
+      "category": "Rounds Question|Physical Exam Pearl|Workup Insight|Management Nuance|Disposition",
       "question": "The question or teaching point title",
       "answer": "The answer or explanation (2-4 sentences)",
       "whyItMatters": "Why this is clinically important (1 sentence)",
@@ -2643,7 +2643,7 @@ function Header({ currentView, onNavigate, streak, userProgress, onOpenSettings 
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-lg">💧</div>
           <span className="font-bold text-xl">Watershed</span>
-          <span className="px-2 py-0.5 bg-indigo-500/20 text-indigo-400 rounded text-xs font-medium">AI-Powered</span>
+          <span className="px-2 py-0.5 bg-indigo-500/20 text-indigo-400 rounded text-xs font-medium">Case-Based Learning</span>
         </div>
 
         <nav className="flex gap-1">
@@ -2802,19 +2802,10 @@ CXR: Cardiomegaly with bilateral pleural effusions and pulmonary vascular conges
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold mb-3">AI-Powered Case Learning</h1>
-        <p className="text-gray-400">Practice clinical skills or analyze patient cases with AI</p>
+        <h1 className="text-3xl font-bold mb-3">Case-Based Medical Learning</h1>
+        <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">We have found that the best learning happens when it's connected to a case. The goal of this site is to augment the learning you are already getting from the patients you are taking care of. Upload a case that has had all PHI removed (or use one of ours if you don't have one) and we will teach you everything you need to take care of that patient, prepare you for rounds, and expand the penumbra of your learning beyond just the case in front of you. You can also explore the roadmap and expand your own library of clinical trials as you learn them.</p>
+        <p className="text-gray-500 text-sm mt-3">If you need an API key, email <a href="mailto:kkeet@stanford.edu" className="text-indigo-400 hover:text-indigo-300 underline">Kevin</a> for one.</p>
       </div>
-
-      {!isApiConfigured && (
-        <div className="mb-6 p-4 bg-amber-900/30 border border-amber-700 rounded-lg flex items-start gap-3">
-          <span className="text-2xl">⚠️</span>
-          <div>
-            <div className="font-semibold text-amber-400">API Key Required</div>
-            <p className="text-sm text-gray-300">Click the settings icon in the header to configure your Anthropic API key for AI-powered features.</p>
-          </div>
-        </div>
-      )}
 
       {/* Clinical Skills Practice Section */}
       <div className="mb-8">
@@ -4122,14 +4113,14 @@ function KnowledgePath({ caseText, analysis, onComplete, onBack, onSelectTopic, 
               <div className="space-y-3">
                 {attendingData.attendingPoints.map((point, index) => {
                   const categoryIcons = {
-                    'Pimp Question': '❓',
+                    'Rounds Question': '❓',
                     'Physical Exam Pearl': '🩺',
                     'Workup Insight': '🔬',
                     'Management Nuance': '💊',
                     'Disposition': '🏥'
                   };
                   const categoryColors = {
-                    'Pimp Question': 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+                    'Rounds Question': 'bg-purple-500/20 text-purple-400 border-purple-500/30',
                     'Physical Exam Pearl': 'bg-blue-500/20 text-blue-400 border-blue-500/30',
                     'Workup Insight': 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
                     'Management Nuance': 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
