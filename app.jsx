@@ -1694,7 +1694,7 @@ const DIFFERENTIAL_TEMPLATES = {
 // ============================================================================
 const ClaudeAPI = {
   apiKey: null,
-  baseUrl: 'https://api.anthropic.com/v1/messages',
+  baseUrl: 'https://aieducator-proxy.kevinkeet.workers.dev',
 
   // Usage limits configuration
   DAILY_CALL_LIMIT: 100,
@@ -1714,7 +1714,7 @@ const ClaudeAPI = {
   },
 
   isConfigured() {
-    return !!this.getApiKey();
+    return true; // API key handled by proxy
   },
 
   // Usage tracking methods
@@ -1804,10 +1804,7 @@ const ClaudeAPI = {
   },
 
   async call(systemPrompt, userMessage, options = {}) {
-    const apiKey = this.getApiKey();
-    if (!apiKey) {
-      throw new Error('API key not configured. Please add your Anthropic API key in Settings.');
-    }
+    // API key is handled by the Cloudflare Worker proxy
 
     // Check usage limits before making call
     const limitCheck = this.checkLimits();
@@ -1829,9 +1826,6 @@ const ClaudeAPI = {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01',
-            'anthropic-dangerous-direct-browser-access': 'true'
           },
           body: JSON.stringify({
             model: options.model || 'claude-sonnet-4-20250514',
